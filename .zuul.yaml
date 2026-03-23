@@ -1,7 +1,106 @@
+---
 - project:
+    vars:
+      ensure_tox_version: '<4'
     check:
       jobs:
-        - noop
+        - openstack-tox-linters
+        - k8sapp-app-netapp-storage-tox-py39
+        - k8sapp-app-netapp-storage-tox-flake8
+        - k8sapp-app-netapp-storage-tox-pylint
+        - k8sapp-app-netapp-storage-tox-metadata
+        - k8sapp-app-netapp-storage-tox-bandit
     gate:
       jobs:
-        - noop
+        - openstack-tox-linters
+        - k8sapp-app-netapp-storage-tox-py39
+        - k8sapp-app-netapp-storage-tox-flake8
+        - k8sapp-app-netapp-storage-tox-pylint
+        - k8sapp-app-netapp-storage-tox-metadata
+        - k8sapp-app-netapp-storage-tox-bandit
+
+- job:
+    name: k8sapp-app-netapp-storage-tox-py39
+    parent: openstack-tox-py39
+    description: |
+      Run py39 test for k8sapp_netapp_storage
+    nodeset: debian-bullseye
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/root
+    files:
+      - python3-k8sapp-netapp-storage/*
+    vars:
+      python_version: 3.9
+      tox_envlist: py39
+      tox_extra_args: -c python3-k8sapp-netapp-storage/k8sapp_netapp_storage/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
+
+- job:
+    name: k8sapp-app-netapp-storage-tox-flake8
+    parent: tox
+    description: |
+      Run flake8 test for k8sapp_netapp_storage
+    nodeset: debian-bullseye
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/root
+    files:
+      - python3-k8sapp-netapp-storage/*
+    vars:
+      tox_envlist: flake8
+      tox_extra_args: -c python3-k8sapp-netapp-storage/k8sapp_netapp_storage/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
+
+- job:
+    name: k8sapp-app-netapp-storage-tox-pylint
+    parent: tox
+    description: |
+      Run pylint test for k8sapp_netapp_storage
+    nodeset: debian-bullseye
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/root
+    files:
+      - python3-k8sapp-netapp-storage/*
+    vars:
+      tox_envlist: pylint
+      tox_extra_args: -c python3-k8sapp-netapp-storage/k8sapp_netapp_storage/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
+
+- job:
+    name: k8sapp-app-netapp-storage-tox-metadata
+    parent: tox
+    description: |
+      Run metadata test for k8sapp_netapp_storage
+    nodeset: debian-bullseye
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/root
+    files:
+      - python3-k8sapp-netapp-storage/*
+    vars:
+      tox_envlist: metadata
+      tox_extra_args: -c python3-k8sapp-netapp-storage/k8sapp_netapp_storage/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
+
+- job:
+    name: k8sapp-app-netapp-storage-tox-bandit
+    parent: tox
+    description: |
+      Run bandit test for k8sapp_netapp_storage
+    nodeset: debian-bullseye
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/root
+    files:
+      - python3-k8sapp-netapp-storage/*
+    vars:
+      tox_envlist: bandit
+      tox_extra_args: -c python3-k8sapp-netapp-storage/k8sapp_netapp_storage/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'

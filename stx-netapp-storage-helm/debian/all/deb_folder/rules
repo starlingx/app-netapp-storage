@@ -1,0 +1,62 @@
+#!/usr/bin/make -f
+
+export DEB_VERSION = $(shell dpkg-parsechangelog | egrep '^Version:' | cut -f 2 -d ' ')
+export RELEASE = $(shell cat /etc/build.info | grep SW_VERSION | cut -d'"' -f2)
+export REVISION = $(shell echo $(DEB_VERSION) | cut -f 4 -d '.')
+
+export APP_NAME = netapp-storage
+export APP_VERSION = $(RELEASE)-$(REVISION)
+export HELM_REPO = stx-platform
+export APP_TARBALL = $(APP_NAME)-$(APP_VERSION).tgz
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	# Update metadata
+	sed -i 's/APP_REPLACE_NAME/$(APP_NAME)/g' $(CURDIR)/files/metadata.yaml
+	sed -i 's/APP_REPLACE_VERSION/$(APP_VERSION)/g' $(CURDIR)/files/metadata.yaml
+	sed -i 's/HELM_REPLACE_REPO/$(HELM_REPO)/g' $(CURDIR)/files/metadata.yaml
+
+	# Create staging directory for tarball
+	mkdir -p $(CURDIR)/staging
+
+	# Copy metadata
+	cp $(CURDIR)/files/metadata.yaml $(CURDIR)/staging/
+
+	# Copy fluxcd manifests and replace version placeholders
+	cp -r $(CURDIR)/fluxcd-manifests $(CURDIR)/staging/
+	find $(CURDIR)/staging/fluxcd-manifests -name '*.yaml' -exec sed -i 's/REPLACE_HELM_CHART_VERSION/26.02.0+STX.stx/g' {} \;
+	$(eval PROVISIONER_VERSION := $(shell ls /usr/lib/helm/netapp-trident-provisioner-*.tgz | sed 's/.*netapp-trident-provisioner-//;s/.tgz//'))
+	find $(CURDIR)/staging/fluxcd-manifests -name '*.yaml' -exec sed -i 's/REPLACE_PROVISIONER_CHART_VERSION/$(PROVISIONER_VERSION)/g' {} \;
+
+	# Create charts directory and copy helm charts
+	mkdir -p $(CURDIR)/staging/charts
+	# Copy from installed helm packages
+	cp /usr/lib/helm/netapp-trident*.tgz $(CURDIR)/staging/charts/
+
+	# Create plugins directory and copy wheels
+	mkdir -p $(CURDIR)/staging/plugins
+	cp /plugins/*.whl $(CURDIR)/staging/plugins/
+
+	# Create checksum
+	cd $(CURDIR)/staging && find . -type f ! -name checksum.md5 -exec md5sum {} \; | sort -k 2 > checksum.md5
+
+	# Create application tarball
+	cd $(CURDIR)/staging && tar czf ../$(APP_TARBALL) .
+
+override_dh_auto_install:
+	# Install application tarball
+	install -d -m 755 $(CURDIR)/debian/stx-netapp-storage-helm/usr/local/share/applications/helm
+	install -p -D -m 644 $(CURDIR)/$(APP_TARBALL) $(CURDIR)/debian/stx-netapp-storage-helm/usr/local/share/applications/helm/
+
+	# Create application directory
+	install -d -m 755 $(CURDIR)/debian/stx-netapp-storage-helm/var/opt/$(APP_NAME)
+
+override_dh_usrlocal:
+	# Skip dh_usrlocal since we intentionally use /usr/local/
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf $(CURDIR)/staging
+	rm -f $(CURDIR)/$(APP_TARBALL)

@@ -1,0 +1,26 @@
+{{- if .Values.storageClasses }}
+{{- range .Values.storageClasses }}
+{{- if .name }}
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .name }}
+provisioner: {{ .provisioner | default "csi.trident.netapp.io" }}
+reclaimPolicy: {{ .reclaimPolicy | default "Delete" }}
+allowVolumeExpansion: {{ .allowVolumeExpansion | default true }}
+{{- if .parameters }}
+parameters:
+  {{- range $key, $value := .parameters }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+{{- if .mountOptions }}
+mountOptions:
+  {{- range .mountOptions }}
+  - {{ . }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

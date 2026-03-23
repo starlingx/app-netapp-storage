@@ -1,0 +1,29 @@
+# Storage Classes configuration
+storageClasses: []
+
+# Snapshot Classes configuration
+snapshotClasses: []
+
+# Backend configuration
+backends: []
+
+# Secrets configuration
+secret: []
+
+# Protocol-to-config mapping (used when backends specify 'protocol')
+protocolMap:
+  nfs:
+    storageDriverName: "ontap-nas"
+    backendType: "ontap-nas"
+  iscsi:
+    storageDriverName: "ontap-san"
+    sanType: "iscsi"
+    backendType: "ontap-san"
+  fcp:
+    storageDriverName: "ontap-san"
+    sanType: "fcp"
+    backendType: "ontap-san"
+  nvme:
+    storageDriverName: "ontap-san"
+    sanType: "nvme"
+    backendType: "ontap-san"

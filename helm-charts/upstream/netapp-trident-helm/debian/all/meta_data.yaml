@@ -1,0 +1,15 @@
+---
+debname: netapp-trident-helm
+debver: 26.02.0-0
+dl_path:
+  name: v26.02.0.tar.gz
+  url: https://github.com/NetApp/trident/archive/refs/tags/v26.02.0.tar.gz
+  sha256sum: 1cfc728295565342ece9feca03672697fdd47c7a808cb8f3d82f347b3461b28c
+src_files:
+  - netapp-trident-helm/files/Makefile
+revision:
+  dist: $STX_DIST
+  stx_patch: 1
+  GITREVCOUNT:
+    SRC_DIR: ${MY_REPO}/stx/app-netapp-storage/helm-charts/upstream/netapp-trident-helm
+    BASE_SRCREV: f8097fa442c078c261aea7d9caec96e0d60ede17

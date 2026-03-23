@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: python3-k8sapp-netapp-storage
+Source: https://opendev.org/starlingx/app-netapp-storage
+
+Files: *
+Copyright: 2025 Wind River Systems, Inc.
+License: Apache-2.0

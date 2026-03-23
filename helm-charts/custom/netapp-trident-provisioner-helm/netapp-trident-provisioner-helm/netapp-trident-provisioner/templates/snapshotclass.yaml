@@ -1,0 +1,13 @@
+{{- if .Values.snapshotClasses }}
+{{- range .Values.snapshotClasses }}
+{{- if .name }}
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: {{ .name }}
+driver: {{ .driver | default "csi.trident.netapp.io" }}
+deletionPolicy: {{ .deletionPolicy | default "Delete" }}
+{{- end }}
+{{- end }}
+{{- end }}

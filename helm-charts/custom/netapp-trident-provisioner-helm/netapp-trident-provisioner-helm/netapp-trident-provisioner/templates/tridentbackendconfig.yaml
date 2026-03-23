@@ -1,0 +1,40 @@
+{{- if .Values.backends }}
+{{- range .Values.backends }}
+{{- /* Simplified format: has 'protocol' key */}}
+{{- if .protocol }}
+{{- $proto := index $.Values.protocolMap .protocol }}
+{{- $backendName := .name }}
+---
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: {{ $backendName }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  version: 1
+  storageDriverName: {{ $proto.storageDriverName | quote }}
+  {{- if $proto.sanType }}
+  sanType: {{ $proto.sanType | quote }}
+  {{- end }}
+  managementLIF: {{ .managementLIF | quote }}
+  {{- if .dataLIF }}
+  dataLIF: {{ .dataLIF | quote }}
+  {{- end }}
+  svm: {{ .svm | quote }}
+  {{- if .credentials }}
+  credentials:
+    name: {{ .credentials.secret_name | quote }}
+  {{- end }}
+{{- /* Full format: has 'metadata' and 'spec' keys */}}
+{{- else if and .metadata .metadata.name }}
+---
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: {{ .metadata.name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  {{- toYaml .spec | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,10 @@
+---
+debname: stx-netapp-storage-helm
+debver: 1.0-1.stx.1
+src_path: stx-netapp-storage-helm
+revision:
+  stx_patch: 1
+  dist: $STX_DIST
+  GITREVCOUNT:
+    SRC_DIR: ${MY_REPO}/stx/app-netapp-storage
+    BASE_SRCREV: f8097fa442c078c261aea7d9caec96e0d60ede17

@@ -1,0 +1,13 @@
+Source: netapp-trident-helm
+Section: libs
+Priority: optional
+Maintainer: StarlingX Developers <starlingx-discuss@lists.starlingx.io>
+Build-Depends: debhelper-compat (= 13),
+               helm
+Standards-Version: 4.5.1
+
+Package: netapp-trident-helm
+Architecture: all
+Depends: ${misc:Depends}
+Description: StarlingX NetApp Trident Helm Charts
+ Helm charts for NetApp Trident CSI storage provisioner

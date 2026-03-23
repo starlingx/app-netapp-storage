@@ -1,0 +1,47 @@
+#
+# Copyright (c) 2026 Wind River Systems, Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: netapp-trident-provisioner
+  namespace: trident
+  labels:
+    chart_group: starlingx-netapp-charts
+spec:
+  releaseName: netapp-trident-provisioner
+  chart:
+    spec:
+      chart: netapp-trident-provisioner
+      version: REPLACE_PROVISIONER_CHART_VERSION
+      sourceRef:
+        kind: HelmRepository
+        name: stx-platform
+      interval: 5m
+  dependsOn:
+    - name: netapp-trident
+  interval: 5m
+  timeout: 10m
+  install:
+    disableWait: false
+    remediation:
+      retries: 5
+  upgrade:
+    disableWait: false
+    remediation:
+      retries: 5
+  test:
+    enable: false
+  valuesFrom:
+    - kind: Secret
+      name: netapp-trident-provisioner-static-overrides
+      valuesKey: netapp-trident-provisioner-static-overrides.yaml
+      optional: true
+    - kind: Secret
+      name: netapp-trident-provisioner-system-overrides
+      valuesKey: netapp-trident-provisioner-system-overrides.yaml
+      optional: true

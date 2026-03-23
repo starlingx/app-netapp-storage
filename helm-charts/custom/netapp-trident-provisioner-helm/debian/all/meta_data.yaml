@@ -1,0 +1,10 @@
+---
+debname: netapp-trident-provisioner-helm
+debver: 1.0-0
+src_path: netapp-trident-provisioner-helm
+revision:
+  dist: $STX_DIST
+  PKG_GITREVCOUNT: true
+  GITREVCOUNT:
+    SRC_DIR: ${MY_REPO}/stx/app-netapp-storage/helm-charts/custom/netapp-trident-provisioner-helm/netapp-trident-provisioner-helm/netapp-trident-provisioner
+    BASE_SRCREV: f8097fa442c078c261aea7d9caec96e0d60ede17

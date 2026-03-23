@@ -1,0 +1,8 @@
+#
+# Copyright (c) 2026 Wind River Systems, Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# System overrides for NetApp Trident Provisioner
+# These values are generated dynamically by the platform
