@@ -7,4 +7,4 @@ revision:
   PKG_GITREVCOUNT: true
   GITREVCOUNT:
     SRC_DIR: ${MY_REPO}/stx/app-netapp-storage/helm-charts/custom/netapp-trident-provisioner-helm/netapp-trident-provisioner-helm/netapp-trident-provisioner
-    BASE_SRCREV: f8097fa442c078c261aea7d9caec96e0d60ede17
+    BASE_SRCREV: c26ee3c3af353cb58ae41122203e1c96f4d45df5
